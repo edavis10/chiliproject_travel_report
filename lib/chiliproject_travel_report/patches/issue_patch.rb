@@ -30,8 +30,8 @@ module ChiliprojectTravelReport
       AND #{db_table}.customized_id=#{Issue.table_name}.id
       AND #{db_table}.custom_field_id=#{depart_custom_field_id}
     WHERE
-      value >= :date_from
-      AND value <= :date_to
+      #{db_table}.value >= :date_from
+      AND #{db_table}.value <= :date_to
   UNION
   SELECT #{Issue.table_name}.id
     FROM #{Issue.table_name}
@@ -40,8 +40,8 @@ module ChiliprojectTravelReport
       AND #{db_table}.customized_id=#{Issue.table_name}.id
       AND #{db_table}.custom_field_id=#{return_custom_field_id}
     WHERE
-      value >= :date_from
-      AND value <= :date_to
+      #{db_table}.value >= :date_from
+      AND #{db_table}.value <= :date_to
 )",
                                 {
                                   :date_from => date_from,
