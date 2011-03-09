@@ -8,6 +8,9 @@ module ChiliprojectTravelReport
         base.class_eval do
           unloadable
 
+          # Issues where a trip's depart or return dates are within date_from or date_to
+          # Partial trips are included, e.g. leave before date_to but return afterwards
+          #
           named_scope :traveling_between, lambda {|date_from, date_to|
             if date_from.blank? || date_to.blank?
               nil_conditions
