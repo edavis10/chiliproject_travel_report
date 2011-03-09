@@ -14,8 +14,8 @@ class TravelReportsController < ApplicationController
         @date_to = params[:date_to].to_s.to_date
       end
 
-      @travel_approved = Issue.traveling_between(@date_from, @date_to).approved_for_travel
-      @travel_denied = Issue.traveling_between(@date_from, @date_to).denied_for_travel
+      @travel_approved = Issue.visible.traveling_between(@date_from, @date_to).approved_for_travel
+      @travel_denied = Issue.visible.traveling_between(@date_from, @date_to).denied_for_travel
 
     rescue # to_date can throw several errors, NoMethodError is common
       @travel_approved = []
