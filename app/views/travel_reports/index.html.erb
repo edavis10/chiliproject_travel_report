@@ -11,3 +11,19 @@
     <p><%= submit_tag l(:button_apply) %></p>
   <% end %>
 </div>
+
+<% if @travel_approved.present? || @travel_denied.present? %>
+  <div id="travel-report">
+    <ul id="approved-travel">
+      <% @travel_approved.each do |issue| %>
+        <%= content_tag(:li, link_to_issue(issue, :project => true)) %>
+      <% end %>
+    </ul>
+
+    <ul id="denied-travel">
+      <% @travel_denied.each do |issue| %>
+        <%= content_tag(:li, link_to_issue(issue, :project => true)) %>
+      <% end %>
+    </ul>
+  </div>
+<% end %>

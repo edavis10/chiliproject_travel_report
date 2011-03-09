@@ -27,3 +27,9 @@ Redmine::Plugin.register :chiliproject_travel_report do
        })
 
 end
+require 'dispatcher'
+Dispatcher.to_prepare :chiliproject_travel_report do
+
+  require_dependency 'issue'
+  Issue.send(:include, ChiliprojectTravelReport::Patches::IssuePatch)
+end

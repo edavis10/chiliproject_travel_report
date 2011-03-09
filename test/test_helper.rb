@@ -83,9 +83,13 @@ module TravelReportTestHelper
     
   end
 
+  def standard_tracker
+    @tracker ||= Tracker.generate!
+  end
+
   def generate_custom_fields
-    @depart_custom_field = IssueCustomField.generate!(:name => 'Depart', :field_format => 'date')
-    @return_custom_field = IssueCustomField.generate!(:name => 'Return', :field_format => 'date')
+    @depart_custom_field = IssueCustomField.generate!(:name => 'Depart', :field_format => 'date', :trackers => [standard_tracker])
+    @return_custom_field = IssueCustomField.generate!(:name => 'Return', :field_format => 'date', :trackers => [standard_tracker])
   end
 
   def generate_issue_statuses
@@ -98,6 +102,16 @@ module TravelReportTestHelper
   
 end
 
+def Issue.generate_to_travel(project, tracker, from, to)
+  issue = Issue.generate_for_project!(project, :tracker => tracker)
+  issue.custom_field_values = {
+    Setting.plugin_chiliproject_travel_report['depart_custom_field_id'] => from,
+    Setting.plugin_chiliproject_travel_report['return_custom_field_id'] => to
+  }
+  issue.save!
+  issue.reload
+  
+end
 
 class ActionController::IntegrationTest
   include RedmineWebratHelper
@@ -111,8 +125,15 @@ class ActiveSupport::TestCase
   end
 
   def configure_plugin(configuration_change={})
-    Setting.plugin_TODO = {
-      
+    generate_custom_fields
+    generate_issue_statuses
+    Setting.plugin_chiliproject_travel_report = {
+      'depart_custom_field_id' => @depart_custom_field.id.to_s,
+      'return_custom_field_id' => @return_custom_field.id.to_s,
+      'approved_issue_status_ids' => [IssueStatus.find_by_name('Approved'),
+                                      IssueStatus.find_by_name('Approved with change')].collect(&:id).collect(&:to_s),
+      'denied_issue_status_ids' => [IssueStatus.find_by_name('Denied'),
+                                    IssueStatus.find_by_name('Denied until later')].collect(&:id).collect(&:to_s)
     }.merge(configuration_change)
   end
 
