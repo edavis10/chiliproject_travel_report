@@ -4,3 +4,5 @@ en:
   travel_report_approved_statuses: "Approved statuses"
   travel_report_denied_statuses: "Denied statuses"
   travel_report_title: "Travel Report"
+  travel_report_travel_approved: "Travel Approved"
+  travel_report_travel_denied: "Travel Denied"

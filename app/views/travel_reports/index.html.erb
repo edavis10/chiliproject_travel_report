@@ -15,15 +15,23 @@
 <% if @travel_approved.present? || @travel_denied.present? %>
   <div id="travel-report">
     <ul id="approved-travel">
+      <li><h3><%= l(:travel_report_travel_approved) %></h3></li>
       <% @travel_approved.each do |issue| %>
         <%= content_tag(:li, link_to_issue(issue, :project => true)) %>
       <% end %>
     </ul>
 
     <ul id="denied-travel">
+      <li><h3><%= l(:travel_report_travel_denied) %></h3></li>
       <% @travel_denied.each do |issue| %>
         <%= content_tag(:li, link_to_issue(issue, :project => true)) %>
       <% end %>
     </ul>
   </div>
+<% end %>
+
+<% content_for :header_tags do %>
+  <style type="text/css">
+    #travel-report ul {list-style-type: none; float:left; width: 45%; }
+  </style>
 <% end %>
