@@ -1,0 +1,11 @@
+<p>
+  <%= content_tag(:label, l(:travel_report_departure_custom_field), :for => 'settings_depart_custom_field_id') %>
+  <%= select_tag("settings[depart_custom_field_id]",
+                 options_from_collection_for_select(IssueCustomField.all, :id, :name, @settings['depart_custom_field_id'].to_i)) %>
+</p>
+
+<p>
+  <%= content_tag(:label, l(:travel_report_return_custom_field), :for => 'settings_return_custom_field_id') %>
+  <%= select_tag("settings[return_custom_field_id]",
+                 options_from_collection_for_select(IssueCustomField.all, :id, :name, @settings['return_custom_field_id'].to_i)) %>
+</p>
