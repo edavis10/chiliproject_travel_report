@@ -8,6 +8,26 @@ module ChiliprojectTravelReport
         base.class_eval do
           unloadable
 
+          named_scope :approved_for_travel, lambda {
+            status_ids = Setting.plugin_chiliproject_travel_report['approved_issue_status_ids']
+            if status_ids.present?
+              {:conditions => ["#{Issue.table_name}.status_id IN (?)", status_ids] }
+            else
+              nil_conditions
+            end
+            
+          }
+          
+          named_scope :denied_for_travel, lambda {
+            status_ids = Setting.plugin_chiliproject_travel_report['denied_issue_status_ids']
+            if status_ids.present?
+              {:conditions => ["#{Issue.table_name}.status_id IN (?)", status_ids] }
+            else
+              nil_conditions
+            end
+            
+          }
+
           # Issues where a trip's depart or return dates are within date_from or date_to
           # Partial trips are included, e.g. leave before date_to but return afterwards
           #

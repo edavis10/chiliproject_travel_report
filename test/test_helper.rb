@@ -102,8 +102,8 @@ module TravelReportTestHelper
   
 end
 
-def Issue.generate_to_travel(project, tracker, from, to)
-  issue = Issue.generate_for_project!(project, :tracker => tracker)
+def Issue.generate_to_travel(project, tracker, status, from, to)
+  issue = Issue.generate_for_project!(project, :tracker => tracker, :status => status)
   issue.custom_field_values = {
     Setting.plugin_chiliproject_travel_report['depart_custom_field_id'] => from,
     Setting.plugin_chiliproject_travel_report['return_custom_field_id'] => to

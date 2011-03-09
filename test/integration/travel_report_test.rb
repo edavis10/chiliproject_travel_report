@@ -65,14 +65,17 @@ class TravelReportTest < ActionController::IntegrationTest
       @role = Role.generate!(:permissions => [:travel_reports, :view_issues])
       User.add_to_project(@user, @project, @role)
 
-      @issue_inside = Issue.generate_to_travel(@project, standard_tracker, '2011-02-02', '2011-02-07')
-      @issue_on_start = Issue.generate_to_travel(@project, standard_tracker, '2011-01-01', '2011-02-07')
-      @issue_on_end = Issue.generate_to_travel(@project, standard_tracker, '2011-12-31', '2012-01-07')
-      @issue_wrap_into_start = Issue.generate_to_travel(@project, standard_tracker, '2010-12-31', '2011-01-01')
-      @issue_wrap_off_of_end = Issue.generate_to_travel(@project, standard_tracker, '2011-12-31', '2012-01-01')
+      approved_status = IssueStatus.find_by_name('Approved')
+      denied_status = IssueStatus.find_by_name('Denied')
       
-      @issue_before_start = Issue.generate_to_travel(@project, standard_tracker, '2010-12-31', '2010-12-31')
-      @issue_after_end = Issue.generate_to_travel(@project, standard_tracker, '2012-01-01', '2012-01-01')
+      @issue_inside = Issue.generate_to_travel(@project, standard_tracker, approved_status, '2011-02-02', '2011-02-07')
+      @issue_on_start = Issue.generate_to_travel(@project, standard_tracker, approved_status, '2011-01-01', '2011-02-07')
+      @issue_on_end = Issue.generate_to_travel(@project, standard_tracker, denied_status, '2011-12-31', '2012-01-07')
+      @issue_wrap_into_start = Issue.generate_to_travel(@project, standard_tracker, denied_status, '2010-12-31', '2011-01-01')
+      @issue_wrap_off_of_end = Issue.generate_to_travel(@project, standard_tracker, denied_status, '2011-12-31', '2012-01-01')
+      
+      @issue_before_start = Issue.generate_to_travel(@project, standard_tracker, approved_status, '2010-12-31', '2010-12-31')
+      @issue_after_end = Issue.generate_to_travel(@project, standard_tracker, denied_status, '2012-01-01', '2012-01-01')
       login_as(@user.login, 'existing')
 
       visit_travel_report_success
@@ -102,8 +105,26 @@ class TravelReportTest < ActionController::IntegrationTest
       
     end
     
-    should "show approved travel requests in one column"
-    should "show denied travel requests in one column"
+    should "show approved travel requests in one column" do
+      fill_in "date_from", :with => '2011-01-01'
+      fill_in "date_to", :with => '2011-12-31'
+      click_button 'Apply'
+
+      assert_response :success
+
+      assert_select "#travel-report" do
+        assert_select "#approved-travel" do
+          assert_select "li", :text => /#{@issue_inside.subject}/
+          assert_select "li", :text => /#{@issue_on_start.subject}/
+          
+          assert_select "li", :text => /#{@issue_on_end.subject}/, :count => 0
+          assert_select "li", :text => /#{@issue_wrap_into_start.subject}/, :count => 0
+          assert_select "li", :text => /#{@issue_wrap_off_of_end.subject}/, :count => 0
+        end
+      end
+      
+    end
+  should "show denied travel requests in one column"
   end
 end
 
