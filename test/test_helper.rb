@@ -51,8 +51,30 @@ module RedmineWebratHelper
 
 end
 
+module TravelReportTestHelper
+  def visit_plugin_configuration_panel
+    visit '/'
+    click_link 'Administration'
+    assert_response :success
+
+    click_link 'Plugins'
+    assert_response :success
+
+    click_link 'Configure'
+    assert_response :success
+  end
+
+  def generate_custom_fields
+    @depart_custom_field = IssueCustomField.generate!(:name => 'Depart', :field_format => 'date')
+    @return_custom_field = IssueCustomField.generate!(:name => 'Return', :field_format => 'date')
+  end
+
+end
+
+
 class ActionController::IntegrationTest
   include RedmineWebratHelper
+  include TravelReportTestHelper
 end
 
 class ActiveSupport::TestCase

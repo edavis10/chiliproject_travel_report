@@ -3,36 +3,17 @@ require 'test_helper'
 class ConfigurationTest < ActionController::IntegrationTest
 
   def setup
-    @depart_custom_field = IssueCustomField.generate!(:name => 'Depart', :field_format => 'date')
-    @return_custom_field = IssueCustomField.generate!(:name => 'Return', :field_format => 'date')
-
+    generate_custom_fields
     @admin = User.generate!(:login => 'existing', :password => 'existing', :password_confirmation => 'existing', :admin => true)
     login_as(@admin.login, 'existing')
   end
   
   should "have a configuration page to store settings" do
-    visit '/'
-    click_link 'Administration'
-    assert_response :success
-
-    click_link 'Plugins'
-    assert_response :success
-
-    click_link 'Configure'
-    assert_response :success
+    visit_plugin_configuration_panel
   end
-  
 
   should "allow configuring the date fields on issues for departure and return dates" do
-    visit '/'
-    click_link 'Administration'
-    assert_response :success
-
-    click_link 'Plugins'
-    assert_response :success
-
-    click_link 'Configure'
-    assert_response :success
+    visit_plugin_configuration_panel
 
     select "Depart", :from => "Departure custom field"
     select "Return", :from => "Return custom field"
