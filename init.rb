@@ -11,7 +11,9 @@ Redmine::Plugin.register :chiliproject_travel_report do
   settings(:partial => 'settings/travel_report',
            :default => {
              'depart_custom_field_id' => nil,
-             'return_custom_field_id' => nil
+             'return_custom_field_id' => nil,
+             'approved_issue_status_ids' => [],
+             'denied_issue_status_ids' => []
            })
 
 end

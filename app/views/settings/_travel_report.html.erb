@@ -9,3 +9,19 @@
   <%= select_tag("settings[return_custom_field_id]",
                  options_from_collection_for_select(IssueCustomField.all, :id, :name, @settings['return_custom_field_id'].to_i)) %>
 </p>
+
+<p>
+  <%= content_tag(:label, l(:travel_report_approved_statuses), :for => 'settings_approved_issue_status_ids') %>
+  <% approved_status_ids = @settings['approved_issue_status_ids'].present? ? @settings['approved_issue_status_ids'].collect(&:to_i) : [] %>
+  <%= select_tag("settings[approved_issue_status_ids]",
+                 options_from_collection_for_select(IssueStatus.all, :id, :name, approved_status_ids),
+                 :multiple => true) %>
+</p>
+
+<p>
+  <%= content_tag(:label, l(:travel_report_denied_statuses), :for => 'settings_denied_issue_status_ids') %>
+  <% denied_status_ids = @settings['denied_issue_status_ids'].present? ? @settings['denied_issue_status_ids'].collect(&:to_i) : [] %>
+  <%= select_tag("settings[denied_issue_status_ids]",
+                 options_from_collection_for_select(IssueStatus.all, :id, :name, denied_status_ids),
+                 :multiple => true) %>
+</p>

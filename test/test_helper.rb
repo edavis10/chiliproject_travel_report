@@ -69,6 +69,14 @@ module TravelReportTestHelper
     @return_custom_field = IssueCustomField.generate!(:name => 'Return', :field_format => 'date')
   end
 
+  def generate_issue_statuses
+    IssueStatus.generate!(:name => 'Open')
+    IssueStatus.generate!(:name => 'Approved')
+    IssueStatus.generate!(:name => 'Denied')
+    IssueStatus.generate!(:name => 'Approved with change')
+    IssueStatus.generate!(:name => 'Denied until later')
+  end
+  
 end
 
 

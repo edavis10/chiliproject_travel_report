@@ -1,3 +1,5 @@
 en:
   travel_report_departure_custom_field: "Departure custom field"
   travel_report_return_custom_field: "Return custom field"
+  travel_report_approved_statuses: "Approved statuses"
+  travel_report_denied_statuses: "Denied statuses"
