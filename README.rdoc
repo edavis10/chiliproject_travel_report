@@ -2,10 +2,6 @@
 
 Shows travel requests
 
-== Features
-
-TODO: fill in features
-
 == Getting the plugin
 
 A copy of the plugin can be downloaded from {Little Stream Software}[https://projects.littlestreamsoftware.com/projects/redmine-misc/files] or from {GitHub}[http://github.com/edavis10/chiliproject_travel_report]
@@ -14,12 +10,23 @@ A copy of the plugin can be downloaded from {Little Stream Software}[https://pro
 == Installation and Setup
 
 1. Follow the Redmine plugin installation steps at: http://www.redmine.org/wiki/redmine/Plugins 
-2. Run the plugin migrations +rake db:migrate_plugins+
-3. Restart your Redmine web servers (e.g. mongrel, thin, mod_rails)
+2. Restart your Redmine web servers (e.g. mongrel, thin, mod_rails)
+3. Setup the Travel Reports permission for the Roles who should be able to run Travel Reports.
+4. Go to the plugin configuration and select the two custom fields that should be used on issues to track the depart and return dates. Also setup which statuses should be used for Approved and Denied travel requests.
 
 == Usage
 
-TODO: Add usage
+A menu item is added to the top menu. On this page is a form that can be used to run a report on the issues which are within the traveling range. The report will match on travel that starts or ends outside the range if part of the travel is within the boundry.
+
+Example:
+
+    Report range:       [============]
+    Trip 1 range:          [==]                | Completely within the range
+    Trip 2 range:   [======]                   | End of the trip is after the report start 
+    Trip 3 range:                [=====]       | Start of the trip is before the report end
+    Trip 4 range: [==]                         | No part of the trip in within the report
+
+In this example Trips 1, 2, and 3 will be shown. Trip 4 will not be shown.
 
 == License
 
