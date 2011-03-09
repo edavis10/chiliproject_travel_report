@@ -16,4 +16,14 @@ Redmine::Plugin.register :chiliproject_travel_report do
              'denied_issue_status_ids' => []
            })
 
+  permission(:travel_reports, {:travel_reports => [:index]})
+
+  menu(:top_menu,
+       :travel_reports,
+       {:controller => 'travel_reports', :action => 'index'},
+       :caption => :travel_report_title,
+       :if => Proc.new {
+         User.current.allowed_to?(:travel_reports, nil, :global => true)
+       })
+
 end

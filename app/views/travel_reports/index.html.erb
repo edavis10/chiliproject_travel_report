@@ -1,0 +1,13 @@
+<h1><%= l(:travel_report_title) %></h1>
+
+<div id="travel-report-form">
+  <% form_tag({:action => 'index'}, :method => :get) do %>
+
+    <p>
+      <%= l(:label_date_from_to, :start => (text_field_tag('date_from', h(@date_from), :size => 10) + calendar_for('date_from')),
+					  :end => (text_field_tag('date_to', h(@date_to), :size => 10) + calendar_for('date_to'))) %>
+    </p>
+
+    <p><%= submit_tag l(:button_apply) %></p>
+  <% end %>
+</div>

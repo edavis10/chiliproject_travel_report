@@ -64,6 +64,25 @@ module TravelReportTestHelper
     assert_response :success
   end
 
+  def visit_travel_report_success
+    visit '/'
+    click_link 'Travel Report'
+    assert_response :success
+  end
+  
+  def visit_travel_report_failure
+    visit '/'
+    assert_select 'a', :text => /travel report/i, :count => 0
+
+    visit '/travel_reports' # Direct url
+    if User.current.logged?
+      assert_response :forbidden
+    else
+      assert current_path.match(/login/i)
+    end
+    
+  end
+
   def generate_custom_fields
     @depart_custom_field = IssueCustomField.generate!(:name => 'Depart', :field_format => 'date')
     @return_custom_field = IssueCustomField.generate!(:name => 'Return', :field_format => 'date')
