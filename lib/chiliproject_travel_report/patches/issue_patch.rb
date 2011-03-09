@@ -19,12 +19,10 @@ module ChiliprojectTravelReport
               db_table = CustomValue.table_name
               conditions = ARCondition.new
               
-              depart_custom_field = IssueCustomField.find_by_id(depart_custom_field_id)
-              return_custom_field = IssueCustomField.find_by_id(return_custom_field_id)
-              if depart_custom_field && return_custom_field
-                conditions.add(["#{Issue.table_name}.id IN (SELECT #{Issue.table_name}.id FROM #{Issue.table_name} LEFT OUTER JOIN #{db_table} ON #{db_table}.customized_type='Issue' AND #{db_table}.customized_id=#{Issue.table_name}.id AND #{db_table}.custom_field_id=#{depart_custom_field.id} WHERE value >= :date_from AND value <= :date_to) OR
+              if depart_custom_field_id && return_custom_field_id
+                conditions.add(["#{Issue.table_name}.id IN (SELECT #{Issue.table_name}.id FROM #{Issue.table_name} LEFT OUTER JOIN #{db_table} ON #{db_table}.customized_type='Issue' AND #{db_table}.customized_id=#{Issue.table_name}.id AND #{db_table}.custom_field_id=#{depart_custom_field_id} WHERE value >= :date_from AND value <= :date_to) OR
 
-#{Issue.table_name}.id IN (SELECT #{Issue.table_name}.id FROM #{Issue.table_name} LEFT OUTER JOIN #{db_table} ON #{db_table}.customized_type='Issue' AND #{db_table}.customized_id=#{Issue.table_name}.id AND #{db_table}.custom_field_id=#{return_custom_field.id} WHERE value >= :date_from AND value <= :date_to)",
+#{Issue.table_name}.id IN (SELECT #{Issue.table_name}.id FROM #{Issue.table_name} LEFT OUTER JOIN #{db_table} ON #{db_table}.customized_type='Issue' AND #{db_table}.customized_id=#{Issue.table_name}.id AND #{db_table}.custom_field_id=#{return_custom_field_id} WHERE value >= :date_from AND value <= :date_to)",
                                 {
                                   :date_from => date_from,
                                   :date_to => date_to
