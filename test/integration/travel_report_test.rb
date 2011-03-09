@@ -90,16 +90,14 @@ class TravelReportTest < ActionController::IntegrationTest
       assert_response :success
 
       assert_select "#travel-report" do
-        assert_select "ul#approved-travel" do
-          assert_select "li", :text => /#{@issue_inside.subject}/
-          assert_select "li", :text => /#{@issue_on_start.subject}/
-          assert_select "li", :text => /#{@issue_on_end.subject}/
-          assert_select "li", :text => /#{@issue_wrap_into_start.subject}/
-          assert_select "li", :text => /#{@issue_wrap_off_of_end.subject}/
+        assert_select "li", :text => /#{@issue_inside.subject}/
+        assert_select "li", :text => /#{@issue_on_start.subject}/
+        assert_select "li", :text => /#{@issue_on_end.subject}/
+        assert_select "li", :text => /#{@issue_wrap_into_start.subject}/
+        assert_select "li", :text => /#{@issue_wrap_off_of_end.subject}/
 
-          assert_select "li", :text => /#{@issue_before_start.subject}/, :count => 0
-          assert_select "li", :text => /#{@issue_after_end.subject}/, :count => 0
-        end
+        assert_select "li", :text => /#{@issue_before_start.subject}/, :count => 0
+        assert_select "li", :text => /#{@issue_after_end.subject}/, :count => 0
       end
       
     end
