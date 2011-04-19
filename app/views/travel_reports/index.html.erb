@@ -8,6 +8,18 @@
 					  :end => (text_field_tag('date_to', h(@date_to), :size => 10) + calendar_for('date_to'))) %>
     </p>
 
+    <p>
+      <%= label_tag('user_ids', l(:field_user)) %>
+      <%= select_tag('user_ids',
+                     options_for_select([[l(:label_all), '']]) +
+                     options_from_collection_for_select(User.active.sort,
+                                                        :id,
+                                                        :name,
+                                                        (@user_ids||[]).collect(&:to_i)),
+                     :multiple => true,
+                     :size => 5) %>
+    </p>
+
     <p><%= submit_tag l(:button_apply) %></p>
   <% end %>
 </div>

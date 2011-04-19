@@ -28,6 +28,19 @@ module ChiliprojectTravelReport
             
           }
 
+          # Issues created by the user_id(s)
+          #
+          # Method prefixed to avoid name clashes
+          named_scope :travel_report_authored_by, lambda {|user_ids|
+            if user_ids.present? && user_ids.any? {|id_param| id_param.present? }
+              user_ids = [user_ids] unless user_ids.is_a?(Array)
+              user_as_integers = user_ids.collect(&:to_i)
+              {
+                :conditions => ["#{Issue.table_name}.author_id IN (?)", user_as_integers]
+              }
+            end
+          }
+          
           # Issues where a trip's depart or return dates are within date_from or date_to
           # Partial trips are included, e.g. leave before date_to but return afterwards
           #

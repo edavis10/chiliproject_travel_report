@@ -58,7 +58,7 @@ class TravelReportTest < ActionController::IntegrationTest
 
   context "running travel reports" do
     setup do
-      @user = User.generate!(:login => 'existing', :password => 'existing', :password_confirmation => 'existing')
+      @user = User.generate!(:login => 'existing', :password => 'existing', :password_confirmation => 'existing').reload
       @project = Project.generate!(:trackers => [standard_tracker])
       @project.issue_custom_fields = IssueCustomField.all
       @project.reload
@@ -104,7 +104,31 @@ class TravelReportTest < ActionController::IntegrationTest
       end
       
     end
-    
+
+    should "allow restricting issues by the author" do
+      @issue_inside.author = @user
+      @issue_inside.save
+      @issue_on_start.author = @user
+      @issue_on_start.save
+      fill_in "date_from", :with => '2011-01-01'
+      fill_in "date_to", :with => '2011-12-31'
+      select @user.name, :from => 'User'
+      click_button 'Apply'
+      assert_response :success
+
+      assert_select "#travel-report" do
+        assert_select "li", :text => /#{@issue_inside.subject}/
+        assert_select "li", :text => /#{@issue_on_start.subject}/
+        
+        assert_select "li", :text => /#{@issue_on_end.subject}/, :count => 0
+        assert_select "li", :text => /#{@issue_wrap_into_start.subject}/, :count => 0
+        assert_select "li", :text => /#{@issue_wrap_off_of_end.subject}/, :count => 0
+        assert_select "li", :text => /#{@issue_before_start.subject}/, :count => 0
+        assert_select "li", :text => /#{@issue_after_end.subject}/, :count => 0
+      end
+      
+    end
+
     should "show approved travel requests in one column" do
       fill_in "date_from", :with => '2011-01-01'
       fill_in "date_to", :with => '2011-12-31'
