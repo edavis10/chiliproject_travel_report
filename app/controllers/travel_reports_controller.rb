@@ -43,32 +43,12 @@ class TravelReportsController < ApplicationController
 
       csv << travel_report_headers
 
-      approved.each do |issue|
-        fields = [
-                issue.id,
-                l(:travel_report_travel_approved),
-                issue.status.name,
-                issue.project.name,
-                issue.tracker.name,
-                issue.subject
-               ]
-        @custom_fields.each {|f| fields << show_value(issue.custom_value_for(f)) }
-
-        csv << fields
+      travel_report_content(approved, l(:travel_report_travel_approved)).each do |line|
+        csv << line
       end
-
-      denied.each do |issue|
-        fields = [
-                  issue.id,
-                  l(:travel_report_travel_denied),
-                  issue.status.name,
-                  issue.project.name,
-                  issue.tracker.name,
-                  issue.subject
-                 ]
-        @custom_fields.each {|f| fields << show_value(issue.custom_value_for(f)) }
-
-        csv << fields
+      
+      travel_report_content(denied, l(:travel_report_travel_denied)).each do |line|
+        csv << line
       end
     end
 
@@ -89,4 +69,21 @@ class TravelReportsController < ApplicationController
 
     return headers
   end
+
+  def travel_report_content(issues, label)
+    issues.collect do |issue|
+      fields = [
+                issue.id,
+                label,
+                issue.status.name,
+                issue.project.name,
+                issue.tracker.name,
+                issue.subject
+               ]
+      @custom_fields.each {|f| fields << show_value(issue.custom_value_for(f)) }
+
+      fields
+    end
+  end
+    
 end
