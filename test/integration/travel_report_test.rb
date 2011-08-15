@@ -169,6 +169,23 @@ class TravelReportTest < ActionController::IntegrationTest
       
 
     end
+
+    should "allow exporting to csv" do
+      fill_in "date_from", :with => '2011-01-01'
+      fill_in "date_to", :with => '2011-12-31'
+      click_button 'Apply'
+
+      assert_response :success
+
+      click_link "CSV"
+      
+      assert_response :success
+      assert_equal "text/csv", response.content_type
+      csv = FasterCSV.parse(response.body)
+
+      assert_equal 6, csv.length # 5 + header
+      assert_equal ["#", "Travel Status", "Status", "Project", "Tracker", "Subject", @depart_custom_field.name, @return_custom_field.name], csv.first
+    end
     
   end
 end
