@@ -15,9 +15,10 @@ class TravelReportsController < ApplicationController
       end
 
     rescue # to_date can throw several errors, NoMethodError is common
-      @date_from = Date.today
-      @date_to = Date.today
     end
+
+    @date_from ||= Date.today
+    @date_to ||= Date.today
 
     @user_ids = params[:user_ids] || []
     @travel_approved = Issue.visible.traveling_between(@date_from, @date_to).approved_for_travel.travel_report_authored_by(@user_ids)
