@@ -39,19 +39,9 @@ class TravelReportsController < ApplicationController
   def travel_report_to_csv(approved, denied)
     decimal_separator = l(:general_csv_decimal_separator)
     export = FCSV.generate(:col_sep => l(:general_csv_separator)) do |csv|
-      headers = [
-                 "#",
-                 l(:travel_report_status),
-                 l(:field_status),
-                 l(:field_project),
-                 l(:field_tracker),
-                 l(:field_subject)
-                ]
+      @custom_fields = IssueCustomField.all
 
-      custom_fields = IssueCustomField.all
-      custom_fields.each {|f| headers << f.name}
-
-      csv << headers
+      csv << travel_report_headers
 
       approved.each do |issue|
         fields = [
@@ -62,7 +52,7 @@ class TravelReportsController < ApplicationController
                 issue.tracker.name,
                 issue.subject
                ]
-        custom_fields.each {|f| fields << show_value(issue.custom_value_for(f)) }
+        @custom_fields.each {|f| fields << show_value(issue.custom_value_for(f)) }
 
         csv << fields
       end
@@ -76,7 +66,7 @@ class TravelReportsController < ApplicationController
                   issue.tracker.name,
                   issue.subject
                  ]
-        custom_fields.each {|f| fields << show_value(issue.custom_value_for(f)) }
+        @custom_fields.each {|f| fields << show_value(issue.custom_value_for(f)) }
 
         csv << fields
       end
@@ -84,5 +74,19 @@ class TravelReportsController < ApplicationController
 
     export
   end
-  
+
+  def travel_report_headers
+    headers = [
+               "#",
+               l(:travel_report_status),
+               l(:field_status),
+               l(:field_project),
+               l(:field_tracker),
+               l(:field_subject)
+              ]
+
+    @custom_fields.each {|f| headers << f.name}
+
+    return headers
+  end
 end
